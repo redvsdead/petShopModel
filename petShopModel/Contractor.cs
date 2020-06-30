@@ -24,7 +24,6 @@ namespace petShopModel
                     contractingThread = new Thread(() =>
                     {
                         Thread.Sleep(7000);
-                        purchaseRequest.IsMade = true;
                         context.Send(obj => ContractionCompleted?.Invoke(obj as Purchase, this), purchaseRequest);
                     });
                     contractingThread.Start();

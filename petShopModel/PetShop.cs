@@ -8,7 +8,5 @@ namespace petShopModel
 {
     public class PetShop
     {
-        private readonly Department Departments;
-        private readonly Queue<Purchase> PurchaseQueue;
     }
 }

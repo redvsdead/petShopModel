@@ -53,7 +53,7 @@ namespace petShopModel
             if (Animals.Amount <= purchase.animalAmount || Houses.Amount <= purchase.houseAmount) {
                 //иначе пытаемся отправить ее на обработку (вернет false, если поставщик занят)
                 if (!contractor.Process(purchase, context))
-                    return false;
+                    return false;   //в этом случае откладываем заказ
                 if (Animals.Amount <= purchase.animalAmount)
                 {
                     Animals.SetMax();
@@ -63,19 +63,67 @@ namespace petShopModel
                     Houses.SetMax();
                 }
             }
-            //если покупается животное, добавляем жилище (при отсутствии его в заказе)
-            if (Animals.Amount > 0 && Houses.Amount == 0)
-            {
-                ++Houses.Amount;
-            }
             //возвращаем результат - была ли доставлена покупка, если нет, заказ вернется обратно в очередь
-            return deliverer.Deliver(purchase, context);
+            if (deliverer.Deliver(purchase, context))
+            {
+                //если доставлена, то убираем проданный товар
+                Animals.Amount -= purchase.animalAmount;
+                Houses.Amount -= purchase.houseAmount;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    class RodentDepartment : Department
+    {
+        protected sealed override Contractor CreateContractor()
+        {
+            return new RodentDepContractor();
+        }
+        protected sealed override DeliveryMan CreateDeliverer()
+        {
+            return new RodentDepDelivery();
+        }
+        protected override bool CanHandle(Purchase purchase)
+        {
+            return purchase is RodentPurchase;
+        }
+    }
+
+    class BirdDepartment : Department
+    {
+        protected sealed override Contractor CreateContractor()
+        {
+            return new BirdDepContractor();
+        }
+        protected sealed override DeliveryMan CreateDeliverer()
+        {
+            return new BirdDepDelivery();
+        }
+        protected override bool CanHandle(Purchase purchase)
+        {
+            return purchase is BirdPurchase;
+        }
+    }
+
+    class FishDepartment : Department
+    {
+        protected sealed override Contractor CreateContractor()
+        {
+            return new FishDepContractor();
+        }
+        protected sealed override DeliveryMan CreateDeliverer()
+        {
+            return new FishDepDelivery();
+        }
+        protected override bool CanHandle(Purchase purchase)
+        {
+            return purchase is FishPurchase;
         }
     }
 }
-
-    class rodentDepartment
-    {
-
-    }
  
