@@ -13,14 +13,10 @@ namespace petShopModel
         public View()
         {
             InitializeComponent();
+            Context = SynchronizationContext.Current;
         }
         public SynchronizationContext Context { get; set; }
         public event Action<int> Start;
-
-        private void View_Load(object sender, EventArgs e)
-        {
-            Context = SynchronizationContext.Current;
-        }
 
         public void OnSimulationFinished()
         {
@@ -53,9 +49,9 @@ namespace petShopModel
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            var view = new View();
-            Start?.Invoke(5);
-            view.Show();
+            //var view = new View();
+            Start?.Invoke(10);
+            //view.Show();
         }
 
         /*

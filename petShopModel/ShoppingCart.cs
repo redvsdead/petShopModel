@@ -52,7 +52,7 @@ namespace petShopModel
         //обрабатываем данное количество заявок, после чего обработка покупок прекращается
         public void DistributeToDeps(int PurchaseAmount, object context)
         {
-            MessageBox.Show("kkkkk");
+            //MessageBox.Show("kkkkk");
             var syncContext = context as SynchronizationContext;
             var rand = new Random();
             while (Purchased < PurchaseAmount)
@@ -61,8 +61,8 @@ namespace petShopModel
                 Thread.Sleep(rand.Next(1000, 2000));
                 ++Purchased;
             }
-            syncContext?.Send(obj => FinishWork?.Invoke(), null);
             MessageBox.Show("mmmmm");
+            syncContext?.Send(obj => FinishWork?.Invoke(), null);
         }
     }
 }

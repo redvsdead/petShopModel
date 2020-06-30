@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.buttonStart = new System.Windows.Forms.Button();
-            this.textBoxPurchases = new System.Windows.Forms.TextBox();
-            this.textBoxCart = new System.Windows.Forms.TextBox();
-            this.textBoxDepartments = new System.Windows.Forms.TextBox();
+            this.textBoxPurchases = new System.Windows.Forms.RichTextBox();
+            this.textBoxCart = new System.Windows.Forms.RichTextBox();
+            this.textBoxDepartments = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // buttonStart
@@ -46,30 +46,33 @@
             // 
             // textBoxPurchases
             // 
-            this.textBoxPurchases.Location = new System.Drawing.Point(38, 64);
+            this.textBoxPurchases.Location = new System.Drawing.Point(32, 43);
             this.textBoxPurchases.Name = "textBoxPurchases";
-            this.textBoxPurchases.Size = new System.Drawing.Size(330, 22);
+            this.textBoxPurchases.Size = new System.Drawing.Size(353, 351);
             this.textBoxPurchases.TabIndex = 5;
+            this.textBoxPurchases.Text = "";
             // 
             // textBoxCart
             // 
-            this.textBoxCart.Location = new System.Drawing.Point(384, 64);
+            this.textBoxCart.Location = new System.Drawing.Point(417, 43);
             this.textBoxCart.Name = "textBoxCart";
-            this.textBoxCart.Size = new System.Drawing.Size(330, 22);
+            this.textBoxCart.Size = new System.Drawing.Size(353, 351);
             this.textBoxCart.TabIndex = 6;
+            this.textBoxCart.Text = "";
             // 
             // textBoxDepartments
             // 
-            this.textBoxDepartments.Location = new System.Drawing.Point(730, 64);
+            this.textBoxDepartments.Location = new System.Drawing.Point(805, 43);
             this.textBoxDepartments.Name = "textBoxDepartments";
-            this.textBoxDepartments.Size = new System.Drawing.Size(330, 22);
+            this.textBoxDepartments.Size = new System.Drawing.Size(353, 351);
             this.textBoxDepartments.TabIndex = 7;
+            this.textBoxDepartments.Text = "";
             // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1095, 674);
+            this.ClientSize = new System.Drawing.Size(1393, 674);
             this.Controls.Add(this.textBoxDepartments);
             this.Controls.Add(this.textBoxCart);
             this.Controls.Add(this.textBoxPurchases);
@@ -77,15 +80,14 @@
             this.Name = "View";
             this.Text = "Form1";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
         private System.Windows.Forms.Button buttonStart;
-        private System.Windows.Forms.TextBox textBoxPurchases;
-        private System.Windows.Forms.TextBox textBoxCart;
-        private System.Windows.Forms.TextBox textBoxDepartments;
+        private System.Windows.Forms.RichTextBox textBoxPurchases;
+        private System.Windows.Forms.RichTextBox textBoxCart;
+        private System.Windows.Forms.RichTextBox textBoxDepartments;
     }
 }
 

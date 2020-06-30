@@ -18,7 +18,7 @@ namespace petShopModel
 
     public class Rodent : Animal
     {
-        public const int max = 20;
+        public const int max = 50;
         public Rodent(int _amount) : base(_amount)
         {
             Amount = _amount;

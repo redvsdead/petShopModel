@@ -97,10 +97,10 @@ namespace petShopModel
         public void Generate(int size, object context)
         {
             Random rand = new Random();
-            for (int i = 0; i <= Address.Length; ++i)
+            for (int i = 0; i < Address.Length; ++i)
             {
                 int animals = rand.Next(0, 41);
-                int houses = rand.Next(0, 41);
+                int houses = rand.Next(0, 10);
                 GenerateOne(context as SynchronizationContext, Address[i], animals, houses);
                 Thread.Sleep(4000);
             }
