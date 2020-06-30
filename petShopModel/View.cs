@@ -43,7 +43,14 @@ namespace petShopModel
         public void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer)
         {
             textBoxDepartments.Text +=
-                $"{deliverer} Доставил покупку {purchase.ToString()} по адресу {purchase.PurchaseAddress}.\n";
+                $"{deliverer} доставил покупку {purchase.ToString()} по адресу {purchase.PurchaseAddress}.\n";
+            //DrawFinished(purchase);
+        }
+
+        public void OnContracted(Purchase purchase, Contractor contractor)
+        {
+            textBoxDepartments.Text +=
+                $"{contractor} доставил товары на склад.n";
             //DrawFinished(purchase);
         }
 

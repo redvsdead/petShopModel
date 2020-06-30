@@ -20,6 +20,7 @@ namespace petShopModel
         public event Action<Purchase> PurchaseToDep;    //направить заказ в отдел
         public event Action<Purchase> PostponePurchase; //отложить заказ
         public event Action<Purchase, DeliveryMan> DeliveryFinished;
+        public event Action<Purchase, Contractor> ContractionFinished;
         //работа окончена, завершение симуляции
         public event Action FinishWork;
 

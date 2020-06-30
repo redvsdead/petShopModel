@@ -21,6 +21,7 @@ namespace petShopModel
             petshop.PurchaseToDep += _view.OnPurchaseProcessed;
             petshop.PostponePurchase += _view.OnPurchasePostponed;
             petshop.DeliveryFinished += _view.OnPurchaseDelivered;
+            petshop.ContractionFinished += view.OnContracted;
             petshop.FinishWork += _view.OnSimulationFinished;
         }
 

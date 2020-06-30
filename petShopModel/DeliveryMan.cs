@@ -22,7 +22,6 @@ namespace petShopModel
             if (CanDeliver)
                 lock (request)
                 {
-                    MessageBox.Show("ddddd");
                     DeliveringThread = new Thread(() =>
                     {
                         Thread.Sleep(3000);

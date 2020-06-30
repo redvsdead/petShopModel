@@ -14,20 +14,23 @@ namespace petShopModel
     {
         protected Department Next;          //паттерн chain of command
         protected DeliveryMan deliverer;    //доставщик отдела
+        protected Contractor contractor;
         protected Animal Animals;
         protected House Houses;
-
-        public event Action<Purchase, DeliveryMan> RequestFinished;
+        public event Action<Purchase, Contractor> ContractionFinished;
+        public event Action<Purchase, DeliveryMan> PurchaseDelivered;
 
         protected Department()
         {
+            contractor = CreateContractor();
             deliverer = CreateDeliverer();
             Animals = CreateAnimals();
             Houses = CreateHouses();
             //изначально в отделе максимальное к-во товаров
             Animals.SetMax();
             Houses.SetMax();
-            deliverer.Delivered += (request, deliverer) => RequestFinished?.Invoke(request, deliverer);
+            contractor.ContractionCompleted += (request, contractor) => ContractionFinished?.Invoke(request, contractor);
+            deliverer.Delivered += (request, deliverer) => PurchaseDelivered?.Invoke(request, deliverer);
         }
 
         public Department SetNext(Department department)
@@ -39,7 +42,7 @@ namespace petShopModel
         //добавляет действие на событие цепочке отделов
         public void Subscribe(Action<Purchase, DeliveryMan> action)
         {
-            RequestFinished += action;  //заказ выполнен и доставлен
+            PurchaseDelivered += action;  //заказ выполнен и доставлен
             Next?.Subscribe(action);   
         }
 
@@ -48,6 +51,7 @@ namespace petShopModel
 
         //создание сотрудников отдела и товаров (фабричные методы)
         protected abstract DeliveryMan CreateDeliverer();
+        protected abstract Contractor CreateContractor();
         protected abstract Animal CreateAnimals();
         protected abstract House CreateHouses();
 
@@ -59,7 +63,10 @@ namespace petShopModel
                 return Next != null && Next.HandleRequest(purchase, context);
             //иначе пытаемся отправить ее на обработку
             if (Animals.Amount <= purchase.animalAmount || Houses.Amount <= purchase.houseAmount) {
-
+                if (!contractor.Contract(purchase, context))
+                {
+                    return false;
+                }
                 if (Animals.Amount <= purchase.animalAmount)
                 {
                     Thread.Sleep(100);  //в это время как бы происходит поставка животных
@@ -92,6 +99,10 @@ namespace petShopModel
         {
             return new RodentDepDelivery();
         }
+        protected sealed override Contractor CreateContractor()
+        {
+            return new RodentDepContractor();
+        }
         protected sealed override Animal CreateAnimals()
         {
             return new Rodent(0);
@@ -112,6 +123,10 @@ namespace petShopModel
         {
             return new BirdDepDelivery();
         }
+        protected sealed override Contractor CreateContractor()
+        {
+            return new BirdDepContractor();
+        }
         protected sealed override Animal CreateAnimals()
         {
             return new Bird(0);
@@ -131,6 +146,10 @@ namespace petShopModel
         protected sealed override DeliveryMan CreateDeliverer()
         {
             return new FishDepDelivery();
+        }
+        protected sealed override Contractor CreateContractor()
+        {
+            return new FishDepContractor();
         }
         protected sealed override Animal CreateAnimals()
         {
