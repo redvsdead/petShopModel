@@ -49,6 +49,7 @@
     <Compile Include="Contractor.cs" />
     <Compile Include="DeliveryMan.cs" />
     <Compile Include="Department.cs" />
+    <Compile Include="IView.cs" />
     <Compile Include="PetShop.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Purchase.cs" />

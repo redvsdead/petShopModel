@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-//товар зоомагазина
+//абстрактный товар зоомагазина, от которого наследуются все конкретные товары
 
 namespace petShopModel
 {

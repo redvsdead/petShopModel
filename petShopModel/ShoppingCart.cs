@@ -13,10 +13,9 @@ namespace petShopModel
     {
         Department ShoppingDepartments;
         Queue<Purchase> Purchases;
-        //public int RequestCounter { get; set; }
         public event Action<Purchase> PurchaseInProcess;
         public event Action<Purchase> PostponePurchase;
-        public event Action FinishPurchase;
+        public event Action FinishWork;
 
         public ShoppingCart(Department _DepartmentList, Queue<Purchase> _Purchases)
         {
@@ -36,7 +35,6 @@ namespace petShopModel
                     if (ShoppingDepartments.HandleRequest(request, context))
                     {
                         context.Send(obj => PurchaseInProcess?.Invoke(obj as Purchase), request);
-                        //RequestCounter++;
                     }
                     else
                     {
@@ -48,19 +46,20 @@ namespace petShopModel
             }
         }
 
-        //т к поток работает отдельно, то определено время, в течение которого рассматриваются заявки
-        //затем обработка покупок прекращается
-        public void DistributeToDeps(int size, object context)
+        int Purchased = 0;
+
+        //обрабатываем данное количество заявок, после чего обработка покупок прекращается
+        public void DistributeToDeps(int PurchaseAmount, object context)
         {
-            //RequestCounter = 0; вставить тут время
             var syncContext = context as SynchronizationContext;
-            var rand = new Random(83);
-            while (/*и тут*/ 5 < size)
+            var rand = new Random();
+            while (Purchased < PurchaseAmount)
             {
                 TrySendPurchase(syncContext);
                 Thread.Sleep(rand.Next(1000, 2000));
+                ++Purchased;
             }
-            syncContext?.Send(obj => FinishPurchase?.Invoke(), null);
+            syncContext?.Send(obj => FinishWork?.Invoke(), null);
         }
     }
 }

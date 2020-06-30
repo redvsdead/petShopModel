@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
+//отделы зоомагазина (связанные между собой цепочно по паттерну chain of command)
+//отдел содержит поставщика, который привозит на склад отдела соответствубщие товары, и доставщика
+
 namespace petShopModel
 {
     abstract class Department
@@ -15,13 +18,18 @@ namespace petShopModel
         protected Animal Animals;
         protected House Houses;
 
-        public event Action<Purchase, Contractor> RequestFinished;
+        public event Action<Purchase, DeliveryMan> RequestFinished;
 
         protected Department()
         {
             contractor = CreateContractor();
             deliverer = CreateDeliverer();
-            contractor.ContractionCompleted += (request, employee) => RequestFinished?.Invoke(request, employee);
+            Animals = CreateAnimals();
+            Houses = CreateHouses();
+            //изначально в отделе максимальное к-во товаров
+            Animals.SetMax();
+            Houses.SetMax();
+            deliverer.Delivered += (request, deliverer) => RequestFinished?.Invoke(request, deliverer);
         }
 
         public Department SetNext(Department department)
@@ -31,7 +39,7 @@ namespace petShopModel
         }
 
         //добавляет действие на событие цепочке отделов
-        public void Subscribe(Action<Purchase, Contractor> action)
+        public void Subscribe(Action<Purchase, DeliveryMan> action)
         {
             RequestFinished += action;
             Next?.Subscribe(action);
@@ -40,9 +48,11 @@ namespace petShopModel
         //может ли отдел принять покупку
         protected abstract bool CanHandle(Purchase purchase);
 
-        //создание сотрудников отдела (фабрика)
+        //создание сотрудников отдела и товаров (фабричные методы)
         protected abstract Contractor CreateContractor();
         protected abstract DeliveryMan CreateDeliverer();
+        protected abstract Animal CreateAnimals();
+        protected abstract House CreateHouses();
 
         //обработка заявки на покупку
         public bool HandleRequest(Purchase purchase, SynchronizationContext context)
@@ -88,6 +98,14 @@ namespace petShopModel
         {
             return new RodentDepDelivery();
         }
+        protected sealed override Animal CreateAnimals()
+        {
+            return new Rodent(0);
+        }
+        protected sealed override House CreateHouses()
+        {
+            return new Cage(0);
+        }
         protected override bool CanHandle(Purchase purchase)
         {
             return purchase is RodentPurchase;
@@ -104,6 +122,14 @@ namespace petShopModel
         {
             return new BirdDepDelivery();
         }
+        protected sealed override Animal CreateAnimals()
+        {
+            return new Bird(0);
+        }
+        protected sealed override House CreateHouses()
+        {
+            return new BirdCage(0);
+        }
         protected override bool CanHandle(Purchase purchase)
         {
             return purchase is BirdPurchase;
@@ -119,6 +145,14 @@ namespace petShopModel
         protected sealed override DeliveryMan CreateDeliverer()
         {
             return new FishDepDelivery();
+        }
+        protected sealed override Animal CreateAnimals()
+        {
+            return new Fish(0);
+        }
+        protected sealed override House CreateHouses()
+        {
+            return new Aquarium(0);
         }
         protected override bool CanHandle(Purchase purchase)
         {

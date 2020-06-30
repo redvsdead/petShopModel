@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
+//поставщик товара в определенный отдел
+
 namespace petShopModel
 {
-    class Contractor
+    public class Contractor
     {
         //поток доставки товара на склад
         private Thread contractingThread;

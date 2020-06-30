@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace petShopModel
 {
-    class DeliveryMan
+    public class DeliveryMan
     {
         //поток доставки
         private Thread DeliveringThread;
