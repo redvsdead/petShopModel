@@ -6,24 +6,11 @@ using System.Threading.Tasks;
 
 namespace petShopModel
 {
-    class House
+    class House : Product
     {
-        private int amount;
-
-        public House(int _amount)
+        public House(int _amount) : base(_amount)
         {
             Amount = _amount;
-        }
-
-        public int Amount
-        {
-            get => amount;
-            set
-            {
-                if (value < 0)
-                    throw new ArgumentException("Amount can not be negative.");
-                amount = value;
-            }
         }
     }
 
@@ -36,20 +23,7 @@ namespace petShopModel
 
         public override string ToString()
         {
-            return $"{Amount} aquarium";
-        }
-    }
-
-    class Terrarium : House
-    {
-        public Terrarium(int _amount) : base(_amount)
-        {
-            Amount = _amount;
-        }
-
-        public override string ToString()
-        {
-            return $"{Amount} terrarium";
+            return $"Аквариум {Amount} шт.";
         }
     }
 
@@ -62,7 +36,7 @@ namespace petShopModel
 
         public override string ToString()
         {
-            return $"{Amount} bird cage";
+            return $"Птичья клетка {Amount} шт.";
         }
     }
 
@@ -75,7 +49,7 @@ namespace petShopModel
 
         public override string ToString()
         {
-            return $"{Amount} cage";
+            return $"Клетка для грызунов {Amount} шт.";
         }
     }
 
