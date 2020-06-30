@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace petShopModel
 {
@@ -21,6 +22,7 @@ namespace petShopModel
             if (CanDeliver)
                 lock (request)
                 {
+                    MessageBox.Show("ddddd");
                     DeliveringThread = new Thread(() =>
                     {
                         Thread.Sleep(3000);

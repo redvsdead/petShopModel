@@ -62,6 +62,7 @@ namespace petShopModel
                 ++Purchased;
             }
             syncContext?.Send(obj => FinishWork?.Invoke(), null);
+            MessageBox.Show("mmmmm");
         }
     }
 }
