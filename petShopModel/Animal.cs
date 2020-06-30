@@ -7,50 +7,60 @@ using System.Threading;
 
 namespace petShopModel
 {
-    class Animal : Product
+    public abstract class Animal : Product
     {
         public Animal(int _amount) : base(_amount)
         {
             Amount = _amount;
         }
+        public abstract void SetMax();
     }
 
-    class Rodent : Animal
+    public class Rodent : Animal
     {
-        const int Max = 20;
+        public const int max = 20;
         public Rodent(int _amount) : base(_amount)
         {
             Amount = _amount;
         }
-
+        public override void SetMax()
+        {
+            Amount = max;
+        }
         public override string ToString()
         {
             return $"Грызун {Amount} шт.";
         }
     }
 
-    class Bird : Animal
+    public class Bird : Animal
     {
-        const int Max = 40;
+        public const int max = 40;
         public Bird(int _amount) : base(_amount)
         {
             Amount = _amount;
         }
-
+        public override void SetMax()
+        {
+            Amount = max;
+        }
         public override string ToString()
         {
             return $"Птица {Amount} шт.";
         }
     }
 
-    class Fish : Animal
+    public class Fish : Animal
     {
-        const int Max = 100;
+        public const int max = 100;
         public Fish(int _amount) : base(_amount)
         {
             Amount = _amount;
         }
-
+        public override void SetMax()
+        {
+            Amount = max;
+        }
         public override string ToString()
         {
             return $"Рыбка {Amount} шт.";

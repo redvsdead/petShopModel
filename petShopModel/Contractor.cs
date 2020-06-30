@@ -38,7 +38,7 @@ namespace petShopModel
     {
         public override string ToString()
         {
-            return $"Поставщик отдела грызунов";
+            return "Поставщик отдела грызунов";
         }
     }
 
@@ -46,7 +46,7 @@ namespace petShopModel
     {
         public override string ToString()
         {
-            return $"Поставщик птичьего отдела";
+            return "Поставщик птичьего отдела";
         }
     }
 
@@ -54,7 +54,7 @@ namespace petShopModel
     {
         public override string ToString()
         {
-            return $"Поставщик отдела рыбок";
+            return "Поставщик отдела рыбок";
         }
     }
 }

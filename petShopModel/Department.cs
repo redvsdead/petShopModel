@@ -12,69 +12,64 @@ namespace petShopModel
         protected Department Next;          //паттерн chain of command
         protected Contractor contractor;    //поставщик отдела
         protected DeliveryMan deliverer;    //доставщик отдела
+        protected Animal Animals;
+        protected House Houses;
 
         public event Action<Purchase, Contractor> RequestFinished;
 
         protected Department()
         {
-            contractor = CreateEmployee();
-            contractor.RequestFinished += (request, employee) => RequestFinished?.Invoke(request, employee);
+            contractor = CreateContractor();
+            deliverer = CreateDeliverer();
+            contractor.ContractionCompleted += (request, employee) => RequestFinished?.Invoke(request, employee);
         }
 
-        /// <summary>
-        /// Метод для связывания двух отделов
-        /// </summary>
-        /// <param name="department">Новый отдел</param>
-        /// <returns>Последний добавленный отдел</returns>
         public Department SetNext(Department department)
         {
             Next = department;
             return department;
         }
 
-        /// <summary>
-        /// Добавить действие на событие для этого и последующих отделов
-        /// </summary>
-        /// <param name="action"></param>
+        //добавляет действие на событие цепочке отделов
         public void Subscribe(Action<Purchase, Contractor> action)
         {
             RequestFinished += action;
             Next?.Subscribe(action);
         }
 
-        /// <summary>
-        /// Может ли отделение обработать поступающую заявку
-        /// </summary>
-        /// <param name="request">Заявка</param>
-        /// <returns>Может ли отделение обработать поступающую заявку</returns>
-        protected abstract bool CanHandle(Purchase request);
+        //может ли отдел принять покупку
+        protected abstract bool CanHandle(Purchase purchase);
 
-        /// <summary>
-        /// Фабричный метод для создания нового сотрудника
-        /// </summary>
-        /// <returns>Новый объект сотрудника</returns>
-        protected abstract Contractor CreateEmployee();
+        //создание сотрудников отдела (фабрика)
+        protected abstract Contractor CreateContractor();
+        protected abstract DeliveryMan CreateDeliverer();
 
-        /// <summary>
-        /// Обработка заявки
-        /// </summary>
-        /// <param name="request">Поступающая заявка</param>
-        /// <param name="context">Контекст синхронизации потоков</param>
-        /// <returns>Была ли обработана заявка</returns>
-        public bool HandleRequest(Purchase request, SynchronizationContext context)
+        //обработка заявки на покупку
+        public bool HandleRequest(Purchase purchase, SynchronizationContext context)
         {
-            //Если этот отдел не может обработать заявку, отправить в следующий
-            if (!CanHandle(request))
-                return Next != null && Next.HandleRequest(request, context);
-
-            //Если сотрудник всё ещё работает над предыдущей заявкой,
-            //обработка заявки пока невозможна
-            if (contractor.IsBusy)
-                return false;
-
-            //Иначе сотрудник начинает работу над заявкой
-            contractor.Process(request, context);
-            return true;
+            //если в этом отделе ее обработать нельзя, она идет в следующий
+            if (!CanHandle(purchase))
+                return Next != null && Next.HandleRequest(purchase, context);
+            if (Animals.Amount <= purchase.animalAmount || Houses.Amount <= purchase.houseAmount) {
+                //иначе пытаемся отправить ее на обработку (вернет false, если поставщик занят)
+                if (!contractor.Process(purchase, context))
+                    return false;
+                if (Animals.Amount <= purchase.animalAmount)
+                {
+                    Animals.SetMax();
+                }
+                if (Houses.Amount <= purchase.houseAmount)
+                {
+                    Houses.SetMax();
+                }
+            }
+            //если покупается животное, добавляем жилище (при отсутствии его в заказе)
+            if (Animals.Amount > 0 && Houses.Amount == 0)
+            {
+                ++Houses.Amount;
+            }
+            //возвращаем результат - была ли доставлена покупка, если нет, заказ вернется обратно в очередь
+            return deliverer.Deliver(purchase, context);
         }
     }
 }
@@ -83,4 +78,4 @@ namespace petShopModel
     {
 
     }
-    //ну и тут наследники-отделы
+ 
