@@ -28,35 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.richTextBoxPurchases = new System.Windows.Forms.RichTextBox();
-            this.richTextBoxCart = new System.Windows.Forms.RichTextBox();
-            this.richTextBoxDepartments = new System.Windows.Forms.RichTextBox();
             this.buttonStart = new System.Windows.Forms.Button();
+            this.textBoxPurchases = new System.Windows.Forms.TextBox();
+            this.textBoxCart = new System.Windows.Forms.TextBox();
+            this.textBoxDepartments = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // richTextBoxPurchases
-            // 
-            this.richTextBoxPurchases.Location = new System.Drawing.Point(12, 46);
-            this.richTextBoxPurchases.Name = "richTextBoxPurchases";
-            this.richTextBoxPurchases.Size = new System.Drawing.Size(312, 263);
-            this.richTextBoxPurchases.TabIndex = 0;
-            this.richTextBoxPurchases.Text = "";
-            // 
-            // richTextBoxCart
-            // 
-            this.richTextBoxCart.Location = new System.Drawing.Point(384, 46);
-            this.richTextBoxCart.Name = "richTextBoxCart";
-            this.richTextBoxCart.Size = new System.Drawing.Size(312, 263);
-            this.richTextBoxCart.TabIndex = 1;
-            this.richTextBoxCart.Text = "";
-            // 
-            // richTextBoxDepartments
-            // 
-            this.richTextBoxDepartments.Location = new System.Drawing.Point(755, 65);
-            this.richTextBoxDepartments.Name = "richTextBoxDepartments";
-            this.richTextBoxDepartments.Size = new System.Drawing.Size(312, 263);
-            this.richTextBoxDepartments.TabIndex = 3;
-            this.richTextBoxDepartments.Text = "";
             // 
             // buttonStart
             // 
@@ -67,27 +43,48 @@
             this.buttonStart.Text = "button1";
             this.buttonStart.UseVisualStyleBackColor = true;
             // 
+            // textBoxPurchases
+            // 
+            this.textBoxPurchases.Location = new System.Drawing.Point(38, 64);
+            this.textBoxPurchases.Name = "textBoxPurchases";
+            this.textBoxPurchases.Size = new System.Drawing.Size(330, 22);
+            this.textBoxPurchases.TabIndex = 5;
+            // 
+            // textBoxCart
+            // 
+            this.textBoxCart.Location = new System.Drawing.Point(384, 64);
+            this.textBoxCart.Name = "textBoxCart";
+            this.textBoxCart.Size = new System.Drawing.Size(330, 22);
+            this.textBoxCart.TabIndex = 6;
+            // 
+            // textBoxDepartments
+            // 
+            this.textBoxDepartments.Location = new System.Drawing.Point(730, 64);
+            this.textBoxDepartments.Name = "textBoxDepartments";
+            this.textBoxDepartments.Size = new System.Drawing.Size(330, 22);
+            this.textBoxDepartments.TabIndex = 7;
+            // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1095, 674);
+            this.Controls.Add(this.textBoxDepartments);
+            this.Controls.Add(this.textBoxCart);
+            this.Controls.Add(this.textBoxPurchases);
             this.Controls.Add(this.buttonStart);
-            this.Controls.Add(this.richTextBoxDepartments);
-            this.Controls.Add(this.richTextBoxCart);
-            this.Controls.Add(this.richTextBoxPurchases);
             this.Name = "View";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.RichTextBox richTextBoxPurchases;
-        private System.Windows.Forms.RichTextBox richTextBoxCart;
-        private System.Windows.Forms.RichTextBox richTextBoxDepartments;
         private System.Windows.Forms.Button buttonStart;
+        private System.Windows.Forms.TextBox textBoxPurchases;
+        private System.Windows.Forms.TextBox textBoxCart;
+        private System.Windows.Forms.TextBox textBoxDepartments;
     }
 }
 

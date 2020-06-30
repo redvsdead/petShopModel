@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace petShopModel
 {
-    interface IView
+    public interface IView
     {
         SynchronizationContext Context { get; set; }
         event Action<int> Start;

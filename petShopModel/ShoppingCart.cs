@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Windows.Forms;
 
 //класс корзины покупок, в которую поступают все оформленные заказы и из которой они отправляются по отделам
 
@@ -51,6 +52,7 @@ namespace petShopModel
         //обрабатываем данное количество заявок, после чего обработка покупок прекращается
         public void DistributeToDeps(int PurchaseAmount, object context)
         {
+            MessageBox.Show("kkkkk");
             var syncContext = context as SynchronizationContext;
             var rand = new Random();
             while (Purchased < PurchaseAmount)

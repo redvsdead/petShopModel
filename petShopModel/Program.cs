@@ -16,7 +16,9 @@ namespace petShopModel
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new View());
+            var view = new View();
+            var presenter = new Presenter(view);
+            Application.Run(view);
         }
     }
 }

@@ -8,19 +8,14 @@ using System.Threading.Tasks;
 
 namespace petShopModel
 {
-    public partial class View : Form
+    public partial class View : Form, IView
     {
         public View()
         {
             InitializeComponent();
-            /*_canvas = panelCanvas.CreateGraphics();
-            _canvas.Clip = new Region(new Rectangle(0, 0, panelCanvas.Width, panelCanvas.Height));
-            _canvas.InterpolationMode = InterpolationMode.High;*/
         }
         public SynchronizationContext Context { get; set; }
-        private readonly Graphics _canvas;
-        private int _asyncDelay = 1;
-        public event Action<int> start;
+        public event Action<int> Start;
 
         private void View_Load(object sender, EventArgs e)
         {
@@ -34,46 +29,41 @@ namespace petShopModel
 
         public void OnPurchaseAdded(Purchase request)
         {
-            richTextBoxPurchases.Text = $"Добавлено в корзину: {request}\n" + richTextBoxPurchases.Text;
+            textBoxPurchases.Text += $"Добавлено в корзину: {request}\n";
             //DrawNewRequest();
         }
 
         public void OnPurchaseProcessed(Purchase request)
         {
-            richTextBoxCart.Text = $"Отправлено в отдел: {request}\n" + richTextBoxCart.Text;
+            textBoxCart.Text += $"Отправлено в отдел: {request}\n";
             //DrawSendRequest(request);
         }
 
         public void OnPurchasePostponed(Purchase request)
         {
-            richTextBoxCart.Text = $"Отложено:     {request}\n" + richTextBoxCart.Text;
+            textBoxCart.Text += $"Отложено:     {request}\n";
         }
 
         public void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer)
         {
-            richTextBoxDepartments.Text =
-                $"{deliverer} Доставил покупку {purchase.ToString()} по адресу {purchase.PurchaseAddress}.\n" + richTextBoxDepartments.Text;
+            textBoxDepartments.Text +=
+                $"{deliverer} Доставил покупку {purchase.ToString()} по адресу {purchase.PurchaseAddress}.\n";
             //DrawFinished(purchase);
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            var view = new ViewTestSize(size =>
-            {
-                ClearTextBoxes();
-                DrawBackground();
-                buttonStart.Enabled = false;
-                Start?.Invoke(size);
-
-            });
+            var view = new View();
+            Start?.Invoke(5);
             view.Show();
         }
 
+        /*
         private void View_FormClosed(object sender, FormClosedEventArgs e)
         {
             _canvas.Dispose();
         }
-        /*
+        
         private readonly Image _imgRequest = Image.FromFile("../../Images/requestWithBg.png");
         private readonly Image _imgRequestFinished = Image.FromFile("../../Images/requestFinished.png");
         private readonly Image _imgBackground = Image.FromFile("../../Images/backgroundAltered.png");
