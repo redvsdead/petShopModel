@@ -13,7 +13,6 @@ namespace petShopModel
     abstract class Department
     {
         protected Department Next;          //паттерн chain of command
-        protected Contractor contractor;    //поставщик отдела
         protected DeliveryMan deliverer;    //доставщик отдела
         protected Animal Animals;
         protected House Houses;
@@ -22,7 +21,6 @@ namespace petShopModel
 
         protected Department()
         {
-            contractor = CreateContractor();
             deliverer = CreateDeliverer();
             Animals = CreateAnimals();
             Houses = CreateHouses();
@@ -41,15 +39,14 @@ namespace petShopModel
         //добавляет действие на событие цепочке отделов
         public void Subscribe(Action<Purchase, DeliveryMan> action)
         {
-            RequestFinished += action;
-            Next?.Subscribe(action);
+            RequestFinished += action;  //заказ выполнен и доставлен
+            Next?.Subscribe(action);   
         }
 
         //может ли отдел принять покупку
         protected abstract bool CanHandle(Purchase purchase);
 
         //создание сотрудников отдела и товаров (фабричные методы)
-        protected abstract Contractor CreateContractor();
         protected abstract DeliveryMan CreateDeliverer();
         protected abstract Animal CreateAnimals();
         protected abstract House CreateHouses();
@@ -60,16 +57,17 @@ namespace petShopModel
             //если в этом отделе ее обработать нельзя, она идет в следующий
             if (!CanHandle(purchase))
                 return Next != null && Next.HandleRequest(purchase, context);
+            //иначе пытаемся отправить ее на обработку
             if (Animals.Amount <= purchase.animalAmount || Houses.Amount <= purchase.houseAmount) {
-                //иначе пытаемся отправить ее на обработку (вернет false, если поставщик занят)
-                if (!contractor.Process(purchase, context))
-                    return false;   //в этом случае откладываем заказ
+
                 if (Animals.Amount <= purchase.animalAmount)
                 {
+                    Thread.Sleep(100);  //в это время как бы происходит поставка животных
                     Animals.SetMax();
                 }
                 if (Houses.Amount <= purchase.houseAmount)
                 {
+                    Thread.Sleep(100);  //в это время как бы происходит поставка жилищ
                     Houses.SetMax();
                 }
             }
@@ -90,10 +88,6 @@ namespace petShopModel
 
     class RodentDepartment : Department
     {
-        protected sealed override Contractor CreateContractor()
-        {
-            return new RodentDepContractor();
-        }
         protected sealed override DeliveryMan CreateDeliverer()
         {
             return new RodentDepDelivery();
@@ -114,10 +108,6 @@ namespace petShopModel
 
     class BirdDepartment : Department
     {
-        protected sealed override Contractor CreateContractor()
-        {
-            return new BirdDepContractor();
-        }
         protected sealed override DeliveryMan CreateDeliverer()
         {
             return new BirdDepDelivery();
@@ -138,10 +128,6 @@ namespace petShopModel
 
     class FishDepartment : Department
     {
-        protected sealed override Contractor CreateContractor()
-        {
-            return new FishDepContractor();
-        }
         protected sealed override DeliveryMan CreateDeliverer()
         {
             return new FishDepDelivery();

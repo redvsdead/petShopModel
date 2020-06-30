@@ -13,7 +13,7 @@ namespace petShopModel
 {
     public abstract class Purchase
     {
-        private string PurchaseAddress;    //адрес доставки
+        public string PurchaseAddress;    //адрес доставки
         public int animalAmount;
         public int houseAmount;
 
@@ -46,7 +46,7 @@ namespace petShopModel
         }
         public override string ToString()
         {
-            return $"Покупка: птица {animalAmount} шт. и птичья клетка {houseAmount} шт.";
+            return $"птица {animalAmount} шт. и птичья клетка {houseAmount} шт.";
         }
     }
 
@@ -57,7 +57,7 @@ namespace petShopModel
         }
         public override string ToString()
         {
-            return $"Покупка: грызун {animalAmount} шт. и клетка {houseAmount} шт.";
+            return $"грызун {animalAmount} шт. и клетка {houseAmount} шт.";
         }
     }
 
@@ -68,7 +68,7 @@ namespace petShopModel
         }
         public override string ToString()
         {
-            return $"Покупка: рыбки {animalAmount} шт. и аквариум {houseAmount} шт.";
+            return $"рыбки {animalAmount} шт. и аквариум {houseAmount} шт.";
         }
     }
 

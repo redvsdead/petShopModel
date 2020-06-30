@@ -10,17 +10,11 @@ namespace petShopModel
     interface IView
     {
         SynchronizationContext Context { get; set; }
-
         event Action<int> Start;
-
+        void OnPurchaseAdded(Purchase purchase);
+        void OnPurchaseProcessed(Purchase purchase);
+        void OnPurchasePostponed(Purchase purchase);
+        void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer);
         void OnSimulationFinished();
-
-        void OnRequestAdded(Purchase request);
-
-        void OnRequestProcessed(Purchase request);
-
-        void OnRequestPostponed(Purchase request);
-
-        void OnRequestFinished(Purchase request, DeliveryMan employee);
     }
 }
