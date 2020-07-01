@@ -57,7 +57,7 @@ namespace petShopModel
         private void buttonStart_Click(object sender, EventArgs e)
         {
             //var view = new View();
-            Start?.Invoke(15);
+            Start?.Invoke(7);
             //view.Show();
         }
 

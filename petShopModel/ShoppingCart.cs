@@ -57,7 +57,7 @@ namespace petShopModel
             while (Purchased < PurchaseAmount)
             {
                 TrySendPurchase(syncContext);
-                Thread.Sleep(rand.Next(1000, 2000));
+                Thread.Sleep(rand.Next(5000, 11000));
                 ++Purchased;
             }
             syncContext?.Send(obj => FinishWork?.Invoke(), null);

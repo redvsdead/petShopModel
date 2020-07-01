@@ -40,17 +40,17 @@ namespace petShopModel
             return department;
         }
 
-        //добавляет действие на событие цепочке отделов
+        //"подключение" всех отделов магазина к событию поставки
         public void SubscribeContraction(Action<Purchase, Contractor> action)
         {
-            ContractionFinished += action;  //поставка выполнена
+            ContractionFinished += action; 
             Next?.SubscribeContraction(action);
         }
 
-        //добавляет действие на событие цепочке отделов
+        //"подключеие" всех отделов магазина к событию доставки
         public void SubscribeDelivery(Action<Purchase, DeliveryMan> action)
         {
-            PurchaseDelivered += action;  //заказ выполнен и доставлен
+            PurchaseDelivered += action; 
             Next?.SubscribeDelivery(action);   
         }
 
@@ -77,15 +77,11 @@ namespace petShopModel
                 }
                 if (Animals.Amount <= purchase.animalAmount)
                 {
-                    MessageBox.Show("поставили животных");
-                    Thread.Sleep(100);  //в это время как бы происходит поставка животных
                     Animals.SetMax();
                 }
                 if (Houses.Amount <= purchase.houseAmount)
                 {
-                    Thread.Sleep(100);  //в это время как бы происходит поставка жилищ
                     Houses.SetMax();
-
                 }
             }
             //возвращаем результат - была ли доставлена покупка, если нет, заказ вернется обратно в очередь
