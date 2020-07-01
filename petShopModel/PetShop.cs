@@ -31,7 +31,8 @@ namespace petShopModel
             PurchaseCreation.AddPurchase += purchase => NewPurchase?.Invoke(purchase);
 
             DepartmentChain = CreateDepartments();
-            DepartmentChain.Subscribe((purchase, deliverer) => DeliveryFinished?.Invoke(purchase, deliverer));
+            DepartmentChain.SubscribeContraction((purchase, contractor) => ContractionFinished?.Invoke(purchase, contractor));
+            DepartmentChain.SubscribeDelivery((purchase, deliverer) => DeliveryFinished?.Invoke(purchase, deliverer));
 
             Cart = new ShoppingCart(DepartmentChain, PurchaseQueue);
             Cart.PurchaseInProcess += purchase => PurchaseToDep?.Invoke(purchase);

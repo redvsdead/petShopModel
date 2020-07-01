@@ -50,14 +50,14 @@ namespace petShopModel
         public void OnContracted(Purchase purchase, Contractor contractor)
         {
             textBoxDepartments.Text +=
-                $"{contractor} доставил товары на склад.n";
+                $"{contractor} доставил товары на склад.\n";
             //DrawFinished(purchase);
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
             //var view = new View();
-            Start?.Invoke(10);
+            Start?.Invoke(15);
             //view.Show();
         }
 

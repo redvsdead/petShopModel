@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 //отделы зоомагазина (связанные между собой цепочно по паттерну chain of command)
 //отдел содержит поставщика, который привозит на склад отдела соответствубщие товары, и доставщика
@@ -40,10 +41,17 @@ namespace petShopModel
         }
 
         //добавляет действие на событие цепочке отделов
-        public void Subscribe(Action<Purchase, DeliveryMan> action)
+        public void SubscribeContraction(Action<Purchase, Contractor> action)
+        {
+            ContractionFinished += action;  //поставка выполнена
+            Next?.SubscribeContraction(action);
+        }
+
+        //добавляет действие на событие цепочке отделов
+        public void SubscribeDelivery(Action<Purchase, DeliveryMan> action)
         {
             PurchaseDelivered += action;  //заказ выполнен и доставлен
-            Next?.Subscribe(action);   
+            Next?.SubscribeDelivery(action);   
         }
 
         //может ли отдел принять покупку
@@ -69,6 +77,7 @@ namespace petShopModel
                 }
                 if (Animals.Amount <= purchase.animalAmount)
                 {
+                    MessageBox.Show("поставили животных");
                     Thread.Sleep(100);  //в это время как бы происходит поставка животных
                     Animals.SetMax();
                 }
@@ -76,6 +85,7 @@ namespace petShopModel
                 {
                     Thread.Sleep(100);  //в это время как бы происходит поставка жилищ
                     Houses.SetMax();
+
                 }
             }
             //возвращаем результат - была ли доставлена покупка, если нет, заказ вернется обратно в очередь
