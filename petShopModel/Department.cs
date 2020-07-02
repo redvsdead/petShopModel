@@ -21,7 +21,7 @@ namespace petShopModel
         public House Houses;
         public event Action<Purchase, Contractor> ContractionFinished;
         public event Action<Purchase, DeliveryMan> PurchaseDelivered;
-        public event Action<Department> MerchChange;    //вот этот ивент
+        public event Action<Department> StockChanges;    //вот этот ивент
 
         //"подключение" всех отделов магазина к событию поставки (тк отделы связаны по цепочке, это можно сделать одним методом)
         public void AddContractionAction(Action<Purchase, Contractor> action)
@@ -34,6 +34,12 @@ namespace petShopModel
         {
             PurchaseDelivered += action;
             Next?.AddDeliveryAtion(action);
+        }
+
+        public void AddStockChanges(Action<Department> action)
+        {
+            StockChanges += action;
+            Next?.AddStockChanges(action);
         }
 
         protected Department()
@@ -83,7 +89,7 @@ namespace petShopModel
                     {
                         Houses.SetMax();
                     }
-                    MerchChange?.Invoke(this);
+                    StockChanges?.Invoke(this);
                 }
             }
             //возвращаем результат - была ли доставлена покупка, если нет, заказ вернется обратно в очередь
@@ -92,7 +98,7 @@ namespace petShopModel
                 //если доставлена, то убираем проданный товар
                 Animals.Amount -= purchase.animalAmount;
                 Houses.Amount -= purchase.houseAmount;
-                MerchChange?.Invoke(this);
+                StockChanges?.Invoke(this);
                 return true;
             }
             else

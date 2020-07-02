@@ -33,11 +33,17 @@ namespace petShopModel
 
         public void OnStockChanges(Department department)
         {
-            textBoxDepartments.Text += $"На складе {department}: {department.Animals} и {department.Houses}.\n";
+            textBoxDepartments.Invoke(new Action(() => 
+            {
+                textBoxDepartments.Text += $"На складе {department}: {department.Animals} и {department.Houses}.\n";
+            }));
         }
         public void OnPurchaseAdded(Purchase purchase)
         {
-            textBoxPurchases.Text += $"Добавлено в корзину: {purchase}\n";
+            textBoxPurchases.Invoke(new Action(() =>
+            {
+                textBoxPurchases.Text += $"Добавлено в корзину: {purchase}\n";
+            }));
         }
         public void OnPurchaseProcessed(Purchase purchase)
         {
@@ -49,11 +55,17 @@ namespace petShopModel
         }
         public void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer)
         {
-            textBoxDepartments.Text += $"{deliverer} доставил покупку {purchase} по адресу {purchase.PurchaseAddress}.\n";
+            textBoxDepartments.Invoke(new Action(() =>
+            {
+                textBoxDepartments.Text += $"{deliverer} доставил покупку {purchase} по адресу {purchase.PurchaseAddress}.\n";
+            }));
         }
         public void OnContracted(Purchase purchase, Contractor contractor)
         {
-            textBoxDepartments.Text += $"{contractor} доставил товары на склад.\n";
+            textBoxDepartments.Invoke(new Action(() =>
+            {
+                textBoxDepartments.Text += $"{contractor} доставил товары на склад.\n";
+            }));
         }
     }
 }

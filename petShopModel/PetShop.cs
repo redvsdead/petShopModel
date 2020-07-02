@@ -37,7 +37,7 @@ namespace petShopModel
             Cart.FinishWork += () => FinishWork?.Invoke();
             //подключаем обработчики событий добавления/откладывания (если доставщик занят)/изменений на складе/доставки покупки для отделов
             PurchaseCreation.AddPurchase += purchase => NewPurchase?.Invoke(purchase);
-            DepartmentChain.MerchChange += department => StockChanges?.Invoke(department);
+            DepartmentChain.AddStockChanges(department => StockChanges?.Invoke(department));
             DepartmentChain.AddContractionAction((purchase, contractor) => ContractionFinished?.Invoke(purchase, contractor));
             DepartmentChain.AddDeliveryAtion((purchase, deliverer) => DeliveryFinished?.Invoke(purchase, deliverer)); 
         }
