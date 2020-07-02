@@ -13,6 +13,7 @@ namespace petShopModel
         public Presenter(IView view)
         {
             _view = view;
+            //подключаем обработчик события старт в view
             _view.Start += OnStart;
             petshop = new PetShop();
             //подключение в кач-ве обработчиков методы view
