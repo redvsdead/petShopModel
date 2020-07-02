@@ -16,17 +16,17 @@ namespace petShopModel
         //выполнение поставки 
         public event Action<Purchase, Contractor> ContractionCompleted;
         //процесс поставки товара на склад, возвращает true, если поставку можно выполнить (т е поставщик не занят) 
-        public virtual bool Contract(Purchase purchaseRequest, SynchronizationContext context)
+        public virtual bool Contract(Purchase purchase, SynchronizationContext context)
         {
             bool ContractionAvialable = contractingThread == null || !contractingThread.IsAlive;
             //смотрим, доступен ли сейчас поставщик 
             if (ContractionAvialable)
-                lock (purchaseRequest)
+                lock (purchase)
                 {
                     contractingThread = new Thread(() =>
                     {
-                        Thread.Sleep(7000);
-                        context.Send(obj => ContractionCompleted?.Invoke(obj as Purchase, this), purchaseRequest);
+                        Thread.Sleep(4000);
+                        context.Send(obj => ContractionCompleted?.Invoke(obj as Purchase, this), purchase);
                     });
                     contractingThread.Start();
                 }

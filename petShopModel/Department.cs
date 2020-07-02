@@ -13,13 +13,26 @@ namespace petShopModel
 {
     abstract class Department
     {
-        protected Department Next;          //паттерн chain of command
+        protected Department Next;          //паттерн chain of command для удобства подключения обработчиков одним методом, 
+                                            //а не для каждого отдела по очереди
         protected DeliveryMan deliverer;    //доставщик отдела
         protected Contractor contractor;
         protected Animal Animals;
         protected House Houses;
         public event Action<Purchase, Contractor> ContractionFinished;
         public event Action<Purchase, DeliveryMan> PurchaseDelivered;
+        //"подключение" всех отделов магазина к событию поставки (тк отделы связаны по цепочке, это можно сделать одним методом)
+        public void AddContractionAction(Action<Purchase, Contractor> action)
+        {
+            ContractionFinished += action;
+            Next?.AddContractionAction(action);
+        }
+        //"подключеие" всех отделов магазина к событию доставки
+        public void AddDeliveryAtion(Action<Purchase, DeliveryMan> action)
+        {
+            PurchaseDelivered += action;
+            Next?.AddDeliveryAtion(action);
+        }
 
         protected Department()
         {
@@ -30,45 +43,28 @@ namespace petShopModel
             //изначально в отделе максимальное к-во товаров
             Animals.SetMax();
             Houses.SetMax();
-            contractor.ContractionCompleted += (request, contractor) => ContractionFinished?.Invoke(request, contractor);
-            deliverer.Delivered += (request, deliverer) => PurchaseDelivered?.Invoke(request, deliverer);
+            contractor.ContractionCompleted += (purchase, contractor) => ContractionFinished?.Invoke(purchase, contractor);
+            deliverer.Delivered += (purchase, deliverer) => PurchaseDelivered?.Invoke(purchase, deliverer);
         }
-
         public Department SetNext(Department department)
         {
             Next = department;
             return department;
         }
-
-        //"подключение" всех отделов магазина к событию поставки
-        public void SubscribeContraction(Action<Purchase, Contractor> action)
-        {
-            ContractionFinished += action; 
-            Next?.SubscribeContraction(action);
-        }
-
-        //"подключеие" всех отделов магазина к событию доставки
-        public void SubscribeDelivery(Action<Purchase, DeliveryMan> action)
-        {
-            PurchaseDelivered += action; 
-            Next?.SubscribeDelivery(action);   
-        }
-
         //может ли отдел принять покупку
         protected abstract bool CanHandle(Purchase purchase);
-
-        //создание сотрудников отдела и товаров (фабричные методы)
+        //создание сотрудников отдела и товаров (тк нужно использовать паттерн фабрика)
         protected abstract DeliveryMan CreateDeliverer();
         protected abstract Contractor CreateContractor();
         protected abstract Animal CreateAnimals();
         protected abstract House CreateHouses();
 
         //обработка заявки на покупку
-        public bool HandleRequest(Purchase purchase, SynchronizationContext context)
+        public bool HandlePurchase(Purchase purchase, SynchronizationContext context)
         {
             //если в этом отделе ее обработать нельзя, она идет в следующий
             if (!CanHandle(purchase))
-                return Next != null && Next.HandleRequest(purchase, context);
+                return Next != null && Next.HandlePurchase(purchase, context);
             //иначе пытаемся отправить ее на обработку
             if (Animals.Amount <= purchase.animalAmount || Houses.Amount <= purchase.houseAmount) {
                 if (!contractor.Contract(purchase, context))

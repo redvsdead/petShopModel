@@ -11,11 +11,11 @@ namespace petShopModel
     {
         SynchronizationContext Context { get; set; }
         event Action<int> Start;
+        void OnContracted(Purchase purchase, Contractor contractor);
+        void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer);
         void OnPurchaseAdded(Purchase purchase);
         void OnPurchaseProcessed(Purchase purchase);
         void OnPurchasePostponed(Purchase purchase);
-        void OnContracted(Purchase purchase, Contractor contractor);
-        void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer);
         void OnSimulationFinished();
     }
 }

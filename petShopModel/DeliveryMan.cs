@@ -15,18 +15,18 @@ namespace petShopModel
         //выполнение доставки товара
         public event Action<Purchase, DeliveryMan> Delivered;
         //процесс доставки заказчику
-        public virtual bool Deliver(Purchase request, SynchronizationContext context)
+        public virtual bool Deliver(Purchase purchase, SynchronizationContext context)
         {
             bool CanDeliver = DeliveringThread == null || !DeliveringThread.IsAlive;
             //смотрим, может ли доставщик выполнить доставку 
             if (CanDeliver)
-                lock (request)
+                lock (purchase)
                 {
                     DeliveringThread = new Thread(() =>
                     {
-                        Thread.Sleep(3000);
-                        request.IsMade = true;  //теперь считаем заказ выполненным
-                        context.Send(obj => Delivered?.Invoke(obj as Purchase, this), request);
+                        Thread.Sleep(8000);
+                        purchase.IsMade = true;  //теперь считаем заказ выполненным
+                        context.Send(obj => Delivered?.Invoke(obj as Purchase, this), purchase);
                     });
                     DeliveringThread.Start();
                 }

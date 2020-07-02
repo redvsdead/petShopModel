@@ -12,18 +12,16 @@ namespace petShopModel
 {
     class ShoppingCart
     {
-        Department ShoppingDepartments;
-        Queue<Purchase> Purchases;
-        public event Action<Purchase> PurchaseInProcess;
-        public event Action<Purchase> PostponePurchase;
-        public event Action FinishWork;
-
+        Department ShoppingDepartments; //цепочка отделов зоомагазина
+        Queue<Purchase> Purchases;  
+        public event Action<Purchase> PurchaseInProcess;    //отправить покупку в отдел
+        public event Action<Purchase> PostponePurchase;     //отложить покупку
+        public event Action FinishWork; //окончание работы магазина
         public ShoppingCart(Department _DepartmentList, Queue<Purchase> _Purchases)
         {
             ShoppingDepartments = _DepartmentList;
             Purchases = _Purchases;
         }
-
         //процесс рассмотрения покупки и отправки ее в соответствующий отдел (если это возможно)
         private void TrySendPurchase(SynchronizationContext context)
         {
@@ -31,16 +29,16 @@ namespace petShopModel
             {
                 if (Purchases.Count != 0)   //если заявки есть, то первую в очереди пытаемся отправить в отдел
                 { 
-                    var request = Purchases.Dequeue();
+                    var purchase = Purchases.Dequeue();
                     //дальше смотрим: если отдел не занят продажей, направляем туда, иначе откладываем
-                    if (ShoppingDepartments.HandleRequest(request, context))
+                    if (ShoppingDepartments.HandlePurchase(purchase, context))
                     {
-                        context.Send(obj => PurchaseInProcess?.Invoke(obj as Purchase), request);
+                        context.Send(obj => PurchaseInProcess?.Invoke(obj as Purchase), purchase);
                     }
                     else
                     {
-                        context.Send(obj => PostponePurchase?.Invoke(obj as Purchase), request);
-                        Purchases.Enqueue(request);
+                        context.Send(obj => PostponePurchase?.Invoke(obj as Purchase), purchase);
+                        Purchases.Enqueue(purchase);
                     }
                 }
                 return;
@@ -48,7 +46,6 @@ namespace petShopModel
         }
 
         int Purchased = 0;
-
         //обрабатываем данное количество заявок, после чего обработка покупок прекращается
         public void DistributeToDeps(int PurchaseAmount, object context)
         {
@@ -57,7 +54,7 @@ namespace petShopModel
             while (Purchased < PurchaseAmount)
             {
                 TrySendPurchase(syncContext);
-                Thread.Sleep(rand.Next(5000, 11000));
+                Thread.Sleep(rand.Next(5000, 7000));
                 ++Purchased;
             }
             syncContext?.Send(obj => FinishWork?.Invoke(), null);

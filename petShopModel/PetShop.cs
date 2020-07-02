@@ -19,29 +19,29 @@ namespace petShopModel
         public event Action<Purchase> NewPurchase;      //поступление нового заказа в отдел
         public event Action<Purchase> PurchaseToDep;    //направить заказ в отдел
         public event Action<Purchase> PostponePurchase; //отложить заказ
-        public event Action<Purchase, DeliveryMan> DeliveryFinished;
-        public event Action<Purchase, Contractor> ContractionFinished;
-        //работа окончена, завершение симуляции
-        public event Action FinishWork;
+        public event Action<Purchase, DeliveryMan> DeliveryFinished;    //покупка доставлена
+        public event Action<Purchase, Contractor> ContractionFinished;  //товар доставлен на склад
+        public event Action FinishWork;         //работа магазина окончена
 
         public PetShop()
         {
             PurchaseQueue = new Queue<Purchase>();
             PurchaseCreation = new PurchaseQueueCreation(PurchaseQueue);
-            PurchaseCreation.AddPurchase += purchase => NewPurchase?.Invoke(purchase);
-
             DepartmentChain = CreateDepartments();
-            DepartmentChain.SubscribeContraction((purchase, contractor) => ContractionFinished?.Invoke(purchase, contractor));
-            DepartmentChain.SubscribeDelivery((purchase, deliverer) => DeliveryFinished?.Invoke(purchase, deliverer));
-
             Cart = new ShoppingCart(DepartmentChain, PurchaseQueue);
+            //подключаем обработчики событий добавления покупки в корзину (откуда она пойдет в отделы),
+            //откладывания покупки (если отдел занят) и окончания работы магазина
             Cart.PurchaseInProcess += purchase => PurchaseToDep?.Invoke(purchase);
             Cart.PostponePurchase += purchase => PostponePurchase?.Invoke(purchase);
             Cart.FinishWork += () => FinishWork?.Invoke();
+            //подключаем обработчики событий добавления/откладывания (если доставщик занят)/доставки покупки для отделов
+            PurchaseCreation.AddPurchase += purchase => NewPurchase?.Invoke(purchase);  
+            DepartmentChain.AddContractionAction((purchase, contractor) => ContractionFinished?.Invoke(purchase, contractor));
+            DepartmentChain.AddDeliveryAtion((purchase, deliverer) => DeliveryFinished?.Invoke(purchase, deliverer)); 
         }
 
         //оформление и обработка покупок
-        public void Manage(int maxPurchase, SynchronizationContext context)
+        public void AcceptPurchase(int maxPurchase, SynchronizationContext context)
         {
             var PurchaseThread = new Thread(syncContext => PurchaseCreation.Generate(maxPurchase, syncContext));
             var CartThread = new Thread(syncContext => Cart.DistributeToDeps(maxPurchase, syncContext));
@@ -49,7 +49,7 @@ namespace petShopModel
             CartThread.Start(context);
         }
 
-        //создание отделов магазина по цепочке
+        //создание отделов магазина по цепочке: грызуны, птицы, рыбы
         private static Department CreateDepartments()
         {
             var RodentDep = new RodentDepartment();
