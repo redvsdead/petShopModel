@@ -99,7 +99,7 @@ namespace petShopModel
             Random rand = new Random();
             for (int i = 0; (i < Address.Length) && (i < size); ++i)
             {
-                int animals = rand.Next(0, 41);
+                int animals = rand.Next(38, 41);
                 int houses = rand.Next(0, 10);
                 GenerateOne(context as SynchronizationContext, Address[i], animals, houses);
                 Thread.Sleep(4000);

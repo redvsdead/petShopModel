@@ -24,7 +24,7 @@ namespace petShopModel
                 {
                     DeliveringThread = new Thread(() =>
                     {
-                        Thread.Sleep(8000);
+                        Thread.Sleep(10000);
                         purchase.IsMade = true;  //теперь считаем заказ выполненным
                         context.Send(obj => Delivered?.Invoke(obj as Purchase, this), purchase);
                     });
