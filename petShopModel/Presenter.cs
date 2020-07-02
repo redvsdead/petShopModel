@@ -16,7 +16,7 @@ namespace petShopModel
             //подключаем обработчик события старт в view
             _view.Start += OnStart;
             petshop = new PetShop();
-            //подключение в кач-ве обработчиков методы view
+            //подключаем в кач-ве обработчиков методы view
             petshop.NewPurchase += _view.OnPurchaseAdded;
             petshop.PurchaseToDep += _view.OnPurchaseProcessed;
             petshop.PostponePurchase += _view.OnPurchasePostponed;
