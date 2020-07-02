@@ -14,6 +14,7 @@ namespace petShopModel
         void OnContracted(Purchase purchase, Contractor contractor);
         void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer);
         void OnPurchaseAdded(Purchase purchase);
+        void OnStockChanges(Department department);
         void OnPurchaseProcessed(Purchase purchase);
         void OnPurchasePostponed(Purchase purchase);
         void OnSimulationFinished();

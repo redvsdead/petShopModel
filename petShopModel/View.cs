@@ -31,6 +31,10 @@ namespace petShopModel
             buttonStart.Enabled = false;
         }
 
+        public void OnStockChanges(Department department)
+        {
+            textBoxDepartments.Text += $"На складе {department}: {department.Animals} и {department.Houses}.\n";
+        }
         public void OnPurchaseAdded(Purchase purchase)
         {
             textBoxPurchases.Text += $"Добавлено в корзину: {purchase}\n";
@@ -45,7 +49,7 @@ namespace petShopModel
         }
         public void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer)
         {
-            textBoxDepartments.Text += $"{deliverer} доставил покупку {purchase.ToString()} по адресу {purchase.PurchaseAddress}.\n";
+            textBoxDepartments.Text += $"{deliverer} доставил покупку {purchase} по адресу {purchase.PurchaseAddress}.\n";
         }
         public void OnContracted(Purchase purchase, Contractor contractor)
         {

@@ -17,6 +17,7 @@ namespace petShopModel
             _view.Start += OnStart;
             petshop = new PetShop();
             //подключаем в кач-ве обработчиков методы view
+            petshop.StockChanges += _view.OnStockChanges;
             petshop.NewPurchase += _view.OnPurchaseAdded;
             petshop.PurchaseToDep += _view.OnPurchaseProcessed;
             petshop.PostponePurchase += _view.OnPurchasePostponed;

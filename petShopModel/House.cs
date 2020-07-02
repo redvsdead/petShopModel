@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace petShopModel
 {
-    abstract class House : Product
+    public abstract class House : Product
     {
         public House(int _amount) : base(_amount)
         {

@@ -11,16 +11,18 @@ using System.Windows.Forms;
 
 namespace petShopModel
 {
-    abstract class Department
+    public abstract class Department
     {
         protected Department Next;          //паттерн chain of command для удобства подключения обработчиков одним методом, 
                                             //а не для каждого отдела по очереди
         protected DeliveryMan deliverer;    //доставщик отдела
         protected Contractor contractor;
-        protected Animal Animals;
-        protected House Houses;
+        public Animal Animals;
+        public House Houses;
         public event Action<Purchase, Contractor> ContractionFinished;
         public event Action<Purchase, DeliveryMan> PurchaseDelivered;
+        public event Action<Department> MerchChange;    //вот этот ивент
+
         //"подключение" всех отделов магазина к событию поставки (тк отделы связаны по цепочке, это можно сделать одним методом)
         public void AddContractionAction(Action<Purchase, Contractor> action)
         {
@@ -71,13 +73,17 @@ namespace petShopModel
                 {
                     return false;
                 }
-                if (Animals.Amount <= purchase.animalAmount)
+                else
                 {
-                    Animals.SetMax();
-                }
-                if (Houses.Amount <= purchase.houseAmount)
-                {
-                    Houses.SetMax();
+                    if (Animals.Amount <= purchase.animalAmount)
+                    {
+                        Animals.SetMax();
+                    }
+                    if (Houses.Amount <= purchase.houseAmount)
+                    {
+                        Houses.SetMax();
+                    }
+                    MerchChange?.Invoke(this);
                 }
             }
             //возвращаем результат - была ли доставлена покупка, если нет, заказ вернется обратно в очередь
@@ -86,6 +92,7 @@ namespace petShopModel
                 //если доставлена, то убираем проданный товар
                 Animals.Amount -= purchase.animalAmount;
                 Houses.Amount -= purchase.houseAmount;
+                MerchChange?.Invoke(this);
                 return true;
             }
             else
@@ -97,6 +104,10 @@ namespace petShopModel
 
     class RodentDepartment : Department
     {
+        public override string ToString()
+        {
+            return "отдела грызунов";
+        }
         protected sealed override DeliveryMan CreateDeliverer()
         {
             return new RodentDepDelivery();
@@ -121,6 +132,10 @@ namespace petShopModel
 
     class BirdDepartment : Department
     {
+        public override string ToString()
+        {
+            return "отдела птиц";
+        }
         protected sealed override DeliveryMan CreateDeliverer()
         {
             return new BirdDepDelivery();
@@ -145,6 +160,10 @@ namespace petShopModel
 
     class FishDepartment : Department
     {
+        public override string ToString()
+        {
+            return "отдела рыбок";
+        }
         protected sealed override DeliveryMan CreateDeliverer()
         {
             return new FishDepDelivery();
