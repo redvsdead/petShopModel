@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
+//интерфейс для view
+
 namespace petShopModel
 {
     public interface IView

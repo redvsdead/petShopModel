@@ -21,8 +21,8 @@ namespace petShopModel
         public event Action<Purchase> PostponePurchase; //отложить заказ
         public event Action<Purchase, DeliveryMan> DeliveryFinished;    //покупка доставлена
         public event Action<Purchase, Contractor> ContractionFinished;  //товар доставлен на склад
-        public event Action<Department> StockChanges;  //изменения на складе
-        public event Action FinishWork;         //работа магазина окончена
+        public event Action<Department> StockChanges;   //изменения на складе
+        public event Action FinishWork;                 //работа магазина окончена
 
         public PetShop()
         {
@@ -45,6 +45,7 @@ namespace petShopModel
         //оформление и обработка покупок
         public void AcceptPurchase(int maxPurchase, SynchronizationContext context)
         {
+            //покупки генерируются и рассылаются в отделы в разных потоках
             var PurchaseThread = new Thread(syncContext => PurchaseCreation.Generate(maxPurchase, syncContext));
             var CartThread = new Thread(syncContext => Cart.DistributeToDeps(maxPurchase, syncContext));
             PurchaseThread.Start(context);

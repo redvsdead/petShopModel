@@ -15,11 +15,68 @@ namespace petShopModel
         {
             InitializeComponent();
             Context = SynchronizationContext.Current;
+            //вызовы методов ниже нужны для мультика
             ScenePanel = Scene.CreateGraphics();
             ScenePanel.Clip = new Region(new Rectangle(0, 0, Scene.Width, Scene.Height));
             ScenePanel.InterpolationMode = InterpolationMode.High;
         }
         public event Action<int> Start;
+        public void OnSimulationFinished()
+        {
+            buttonStart.Enabled = true;
+        }
+        private void buttonStart_Click(object sender, EventArgs e)
+        {
+            //очищаем поля с логами, рисуем зоомагазин
+            textBoxCart.Clear();
+            textBoxDepartments.Clear();
+            textBoxPurchases.Clear();
+            DrawPetShop();
+            Start?.Invoke(15);   //запускаем симуляцию с 15 заявками
+            buttonStart.Enabled = false;
+        }
+
+        public void OnStockChanges(Department department)
+        {
+            textBoxDepartments.Invoke(new Action(() =>
+            {
+                textBoxDepartments.Text += $"На складе {department}: {department.Animals} и {department.Houses}.\n";
+            }));
+        }
+        public void OnPurchaseAdded(Purchase purchase)
+        {
+            textBoxPurchases.Invoke(new Action(() =>
+            {
+                textBoxPurchases.Text += $"Добавлено в корзину: {purchase}\n";
+                DrawPurchase();
+            }));
+        }
+        public void OnPurchaseProcessed(Purchase purchase)
+        {
+            textBoxCart.Text += $"Отправлено в отдел: {purchase}\n";
+            DrawToDep(purchase);
+        }
+        public void OnPurchasePostponed(Purchase purchase)
+        {
+            textBoxCart.Text += $"Отложено: {purchase}\n";
+        }
+        public void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer)
+        {
+            textBoxDepartments.Invoke(new Action(() =>
+            {
+                textBoxDepartments.Text += $"{deliverer} доставил покупку {purchase} по адресу {purchase.PurchaseAddress}.\n";
+                DrawDelivery(purchase);
+            }));
+        }
+        public void OnContracted(Purchase purchase, Contractor contractor)
+        {
+            textBoxDepartments.Invoke(new Action(() =>
+            {
+                textBoxDepartments.Text += $"{contractor} доставил товары на склад.\n";
+                DrawContraction(purchase);
+            }));
+        }
+        ///////////////// отсюда начинаются рисунки
         private readonly Graphics ScenePanel; //здесь рисуется визуальная часть       
         //вспомогательные функции для рисования
         //для задержки анимации
@@ -177,61 +234,6 @@ namespace petShopModel
             }
 
             ScenePanel.FillRectangle(Brushes.White, new RectangleF(position.X, position.Y, imgSize, imgSize));
-        }
-
-        public void OnSimulationFinished()
-        {
-            buttonStart.Enabled = true;
-        }
-        private void buttonStart_Click(object sender, EventArgs e)
-        {
-            textBoxCart.Clear();
-            textBoxDepartments.Clear();
-            textBoxPurchases.Clear();
-            DrawPetShop();
-            Start?.Invoke(7);   //запускаем симуляцию с 7 заявками
-            buttonStart.Enabled = false;
-        }
-
-        public void OnStockChanges(Department department)
-        {
-            textBoxDepartments.Invoke(new Action(() => 
-            {
-                textBoxDepartments.Text += $"На складе {department}: {department.Animals} и {department.Houses}.\n";
-            }));
-        }
-        public void OnPurchaseAdded(Purchase purchase)
-        {
-            textBoxPurchases.Invoke(new Action(() =>
-            {
-                textBoxPurchases.Text += $"Добавлено в корзину: {purchase}\n";
-                DrawPurchase();
-            }));
-        }
-        public void OnPurchaseProcessed(Purchase purchase)
-        {
-            textBoxCart.Text += $"Отправлено в отдел: {purchase}\n";
-            DrawToDep(purchase);
-        }
-        public void OnPurchasePostponed(Purchase purchase)
-        {
-            textBoxCart.Text += $"Отложено: {purchase}\n";
-        }
-        public void OnPurchaseDelivered(Purchase purchase, DeliveryMan deliverer)
-        {
-            textBoxDepartments.Invoke(new Action(() =>
-            {
-                textBoxDepartments.Text += $"{deliverer} доставил покупку {purchase} по адресу {purchase.PurchaseAddress}.\n";
-                DrawDelivery(purchase);
-            }));
-        }
-        public void OnContracted(Purchase purchase, Contractor contractor)
-        {
-            textBoxDepartments.Invoke(new Action(() =>
-            {
-                textBoxDepartments.Text += $"{contractor} доставил товары на склад.\n";
-                DrawContraction(purchase);
-            }));
         }
     }
 }
